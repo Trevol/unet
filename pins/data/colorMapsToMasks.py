@@ -30,11 +30,11 @@ def main():
     colorMap = list(readColorMap(f'{labelDir}/colormap.txt'))
     pinOnlyColorMap = [
         (0, 'background', np.uint8([0, 0, 0]), np.uint8([0, 0, 0])),
-        (1, 'pin', np.uint8([128, 0, 0]), np.uint8([0, 0, 128]))
+        (255, 'pin', np.uint8([128, 0, 0]), np.uint8([0, 0, 128]))
     ]
     solderOnlyColorMap = [
         (0, 'background', np.uint8([0, 0, 0]), np.uint8([0, 0, 0])),
-        (1, 'pin_w_solder', np.uint8([0, 128, 0]), np.uint8([0, 128, 0]))
+        (255, 'pin_w_solder', np.uint8([0, 128, 0]), np.uint8([0, 128, 0]))
     ]
     for pngFile in enumerateColorMapsPngs(labelDir):
         print(pngFile)
@@ -45,20 +45,20 @@ def main():
         cv2.imwrite(maskFile, idImage)
 
         # pin-only
-        # idImage = colorLabel2labelIdImage(colorLabelsImage, pinOnlyColorMap)
-        # maskFile = 'pin_only_masks/' + pngFile
-        # cv2.imwrite(maskFile, idImage)
+        idImage = colorLabel2labelIdImage(colorLabelsImage, pinOnlyColorMap)
+        maskFile = 'pin_only_masks/' + pngFile
+        cv2.imwrite(maskFile, idImage)
 
         # solder-only
         idImage = colorLabel2labelIdImage(colorLabelsImage, solderOnlyColorMap)
         maskFile = 'solder_only_masks/' + pngFile
         cv2.imwrite(maskFile, idImage)
 
-def main():
-    im = cv2.imread('/home/trevol/HDD_DATA/Computer_Vision_Task/Computer_Vision_Task/frames_6_unet_pins_only/f_0042_2800.00_2.80.jpg')
-    print(im.dtype, im.min(), im.max())
+def main__():
+    # im = cv2.imread('/home/trevol/HDD_DATA/Computer_Vision_Task/Computer_Vision_Task/frames_6_unet_pins_only/f_0350_23333.33_23.33.png')
+    # print(im.dtype, im.min(), im.max())
 
-    im = cv2.imread('../../data/membrane/test/0_predict.png')
+    im = cv2.imread('../../data/membrane/train/label/0.png')
     print(im.dtype, im.min(), im.max())
 
 main()

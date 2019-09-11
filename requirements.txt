@@ -3,4 +3,4 @@ opencv-python
 keras
 tensorflow-gpu
 scipy
-skimage
+scikit-image

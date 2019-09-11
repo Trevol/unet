@@ -54,5 +54,11 @@ def main():
         maskFile = 'solder_only_masks/' + pngFile
         cv2.imwrite(maskFile, idImage)
 
+def main():
+    im = cv2.imread('/home/trevol/HDD_DATA/Computer_Vision_Task/Computer_Vision_Task/frames_6_unet_pins_only/f_0042_2800.00_2.80.jpg')
+    print(im.dtype, im.min(), im.max())
+
+    im = cv2.imread('../../data/membrane/test/0_predict.png')
+    print(im.dtype, im.min(), im.max())
 
 main()

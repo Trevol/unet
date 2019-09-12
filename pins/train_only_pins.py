@@ -1,5 +1,7 @@
 import argparse
 
+from keras.callbacks import ReduceLROnPlateau
+
 from model import *
 from data import *
 
@@ -28,7 +30,9 @@ def main():
     model_checkpoint = ModelCheckpoint(f'checkpoints/unet_{colorMode}_pins_{{epoch}}_{{loss:.4f}}_{{acc:.3f}}.hdf5',
                                        monitor='loss',
                                        verbose=1, save_best_only=True)
-    model.fit_generator(myGene, steps_per_epoch=2000, epochs=5, callbacks=[model_checkpoint])
+    reduce_lr = ReduceLROnPlateau(monitor='loss', factor=0.2,
+                                  patience=5, min_lr=0.001)
+    model.fit_generator(myGene, steps_per_epoch=2000, epochs=5, callbacks=[model_checkpoint, reduce_lr])
 
     # imgs_train,imgs_mask_train = geneTrainNpy("data/membrane/train/aug/","data/membrane/train/aug/")
     # model.fit(imgs_train, imgs_mask_train, batch_size=2, nb_epoch=10, verbose=1,validation_split=0.2, shuffle=True, callbacks=[model_checkpoint])

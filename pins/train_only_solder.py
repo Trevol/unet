@@ -8,7 +8,7 @@ def main():
     arg.add_argument('--batch_size', type=int, default=2)
     arg = arg.parse_args()
 
-    print('BATCH_SIZE: ', arg.batch_size())
+    print('BATCH_SIZE: ', arg.batch_size)
 
     data_gen_args = dict(rotation_range=0.2,
                          width_shift_range=0.05,

@@ -1,8 +1,12 @@
 from model import *
 from data import *
-
+import argparse
 
 def main():
+    arg = argparse.ArgumentParser()
+    arg.add_argument('--batch_size', type=int, default=2)
+    arg = arg.parse_args()
+
     data_gen_args = dict(rotation_range=0.2,
                          width_shift_range=0.05,
                          height_shift_range=0.05,
@@ -10,7 +14,7 @@ def main():
                          zoom_range=0.05,
                          horizontal_flip=True,
                          fill_mode='nearest')
-    myGene = trainGenerator(2, 'data', 'image', 'solder_only_masks', data_gen_args, image_color_mode="rgb",
+    myGene = trainGenerator(arg.batch_size, 'data', 'image', 'solder_only_masks', data_gen_args, image_color_mode="rgb",
                             target_size=(512, 512),
                             save_to_dir=None)
     model = unet(input_size=(512, 512, 3))

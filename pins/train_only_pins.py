@@ -10,12 +10,16 @@ def main():
                          zoom_range=0.05,
                          horizontal_flip=True,
                          fill_mode='nearest')
-    myGene = trainGenerator(2, 'data', 'image', 'pin_only_masks', data_gen_args, image_color_mode="rgb",
+
+    colorMode = "grayscale"
+    myGene = trainGenerator(2, 'data', 'image', 'pin_only_masks', data_gen_args, image_color_mode=colorMode,
                             target_size=(512, 512),
                             save_to_dir=None)
-    model = unet(input_size=(512, 512, 3))
-    model_checkpoint = ModelCheckpoint('unet_pins.hdf5', monitor='loss', verbose=1, save_best_only=True)
-    model.fit_generator(myGene, steps_per_epoch=2000, epochs=5, callbacks=[model_checkpoint])
+    model = unet(input_size=(512, 512, 1))
+    os.makedirs('checkpoints', exist_ok=True)
+    model_checkpoint = ModelCheckpoint(f'checkpoints/unet_{colorMode}_pins_{{epoch}}_{{loss:.4f}}_{{acc:.3f}}.hdf5', monitor='loss',
+                                       verbose=1, save_best_only=True)
+    model.fit_generator(myGene, steps_per_epoch=500, epochs=5, callbacks=[model_checkpoint])
 
     # imgs_train,imgs_mask_train = geneTrainNpy("data/membrane/train/aug/","data/membrane/train/aug/")
     # model.fit(imgs_train, imgs_mask_train, batch_size=2, nb_epoch=10, verbose=1,validation_split=0.2, shuffle=True, callbacks=[model_checkpoint])

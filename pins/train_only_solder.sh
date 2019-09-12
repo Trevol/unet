@@ -7,4 +7,4 @@ ROOT="$(pwd)/.."
 export PYTHONPATH=$PYTHONPATH:$ROOT
 
 # sudo mount /dev/sdb2 /mnt/HDD
-python train_only_solder.py
+python train_only_solder.py "$*"

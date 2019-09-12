@@ -15,9 +15,11 @@ def main():
     myGene = trainGenerator(2, 'data', 'image', 'pin_only_masks', data_gen_args, image_color_mode=colorMode,
                             target_size=(512, 512),
                             save_to_dir=None)
+
     model = unet(input_size=(512, 512, 1))
     os.makedirs('checkpoints', exist_ok=True)
-    model_checkpoint = ModelCheckpoint(f'checkpoints/unet_{colorMode}_pins_{{epoch}}_{{loss:.4f}}_{{acc:.3f}}.hdf5', monitor='loss',
+    model_checkpoint = ModelCheckpoint(f'checkpoints/unet_{colorMode}_pins_{{epoch}}_{{loss:.4f}}_{{acc:.3f}}.hdf5',
+                                       monitor='loss',
                                        verbose=1, save_best_only=True)
     model.fit_generator(myGene, steps_per_epoch=500, epochs=5, callbacks=[model_checkpoint])
 

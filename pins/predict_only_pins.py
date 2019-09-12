@@ -9,7 +9,8 @@ import os
 
 def readImage(fileName, target_size=(512, 512), as_gray=False):
     img = skimage.io.imread(fileName, as_gray=as_gray)
-    img = img / 255
+    if img.dtype==np.uint8:
+        img = img / 255
     img = trans.resize(img, target_size)
     img = np.reshape(img, img.shape + (1,)) if as_gray else img
     img = np.reshape(img, (1,) + img.shape)
@@ -38,10 +39,10 @@ def main():
 
 
 def main():
+    image = readImage('data/image/f_0350_23333.33_23.33.jpg', as_gray=True)
+
     model = unet(input_size=(512, 512, 1))
     model.load_weights("checkpoints/unet_grayscale_pins_1_0.6830_0.949.hdf5")
-
-    image = readImage('data/image/f_0350_23333.33_23.33.jpg', as_gray=True)
     results = model.predict(image, batch_size=1, verbose=0)
 
     image = np.round(np.squeeze(image[0]) * 255, 0).astype(np.uint8)

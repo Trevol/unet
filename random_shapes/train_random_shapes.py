@@ -1,13 +1,8 @@
-import argparse
-
 from model import *
 from data import *
 
 
 def main():
-    arg = argparse.ArgumentParser()
-    arg.add_argument('--batch_size', type=int, default=2)
-    arg = arg.parse_args()
     data_gen_args = dict(rotation_range=0.2,
                          width_shift_range=0.05,
                          height_shift_range=0.05,
@@ -15,9 +10,10 @@ def main():
                          zoom_range=0.05,
                          horizontal_flip=True,
                          fill_mode='nearest')
+    data_gen_args = dict()  # try without augmentations
 
     colorMode = "grayscale"
-    myGene = trainGenerator(arg.batch_size, 'data', 'image', 'pin_only_masks', data_gen_args, image_color_mode=colorMode,
+    myGene = trainGenerator(2, 'data', 'image', 'label', data_gen_args, image_color_mode=colorMode,
                             target_size=(512, 512),
                             save_to_dir=None)
 
@@ -25,7 +21,7 @@ def main():
     model.load_weights('../unet_membrane_5_0.123_0.946.hdf5')
 
     os.makedirs('checkpoints', exist_ok=True)
-    model_checkpoint = ModelCheckpoint(f'checkpoints/unet_{colorMode}_pins_{{epoch}}_{{loss:.4f}}_{{acc:.3f}}.hdf5',
+    model_checkpoint = ModelCheckpoint(f'checkpoints/unet_{colorMode}_shapes_{{epoch}}_{{loss:.4f}}_{{acc:.3f}}.hdf5',
                                        monitor='loss',
                                        verbose=1, save_best_only=True)
     model.fit_generator(myGene, steps_per_epoch=2000, epochs=5, callbacks=[model_checkpoint])

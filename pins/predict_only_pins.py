@@ -39,10 +39,10 @@ def main():
 
 
 def main():
-    image = readImage('data/image/f_0350_23333.33_23.33.jpg', as_gray=True)
+    image = readImage('testData/f_0021_1400.00_1.40.jpg', as_gray=True)
 
     model = unet(input_size=(512, 512, 1))
-    model.load_weights("checkpoints/unet_grayscale_pins_1_0.6830_0.949.hdf5")
+    model.load_weights("checkpoints/unet_grayscale_pins_1_0.0103_0.998.hdf5")
     results = model.predict(image, batch_size=1, verbose=0)
 
     image = np.round(np.squeeze(image[0]) * 255, 0).astype(np.uint8)
@@ -55,8 +55,9 @@ def main():
 
 def main_():
     model = unet()
-    model.load_weights("../unet_membrane.hdf5")
-    image = readImage('../data/membrane/test/0.png', target_size=(256, 256), as_gray=True)
+    model.load_weights("../unet_membrane_5_0.123_0.946.hdf5")
+    # image = readImage('../data/membrane/test/0.png', target_size=(256, 256), as_gray=True)
+    image = readImage('data/image/f_0350_23333.33_23.33.jpg', target_size=(256, 256), as_gray=True)
     results = model.predict(image, batch_size=1, verbose=0)
 
     image = np.round(np.squeeze(image[0])*255, 0).astype(np.uint8)

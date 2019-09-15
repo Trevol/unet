@@ -21,7 +21,7 @@ def main():
     model.load_weights('../unet_membrane_5_0.123_0.946.hdf5')
 
     os.makedirs('checkpoints', exist_ok=True)
-    model_checkpoint = ModelCheckpoint(f'checkpoints/unet_{colorMode}_shapes_{{epoch}}_{{loss:.4f}}_{{acc:.3f}}.hdf5',
+    model_checkpoint = ModelCheckpoint(f'checkpoints/grayscale_shapes/unet_{colorMode}_shapes_{{epoch}}_{{loss:.4f}}_{{acc:.3f}}.hdf5',
                                        monitor='loss',
                                        verbose=1, save_best_only=True)
     model.fit_generator(myGene, steps_per_epoch=2000, epochs=5, callbacks=[model_checkpoint])

@@ -28,26 +28,43 @@ def yieldImages(dir, target_size=(512, 512), as_gray=False):
         yield img, originalImage, fileName
 
 
-def main():
-    model = unet(input_size=(512, 512, 3))
-    model.load_weights("unet_pins.hdf5")
+def playResults():
+    framesDir = '/home/trevol/HDD_DATA/Computer_Vision_Task/Computer_Vision_Task/frames_6'
+    savePath = '/home/trevol/HDD_DATA/Computer_Vision_Task/Computer_Vision_Task/frames_6_unet_pins_only'
+    for fileName in sorted(os.listdir(savePath)):
+        if not fileName.endswith('.png'):
+            continue
+        resultPath = os.path.join(savePath, fileName)
+        framePath = os.path.join(framesDir, fileName.replace('.png', '.jpg'))
+        result = cv2.imread(resultPath)
+        original = cv2.imread(framePath)
+        cv2.imshow('original', original)
+        cv2.imshow('result', result)
+        if cv2.waitKey(1) == 27:
+            break
+
+
+def predict256x256x3_n_save():
+    targetSize = (256, 256)
+    model = unet(input_size=targetSize + (3,))
+    model.load_weights("checkpoints/rgb/unet_pins_20_0.001_1.000.hdf5")
 
     framesDir = '/home/trevol/HDD_DATA/Computer_Vision_Task/Computer_Vision_Task/frames_6'
     savePath = '/home/trevol/HDD_DATA/Computer_Vision_Task/Computer_Vision_Task/frames_6_unet_pins_only'
-    for image, fileName in yieldImages(framesDir):
-        results = model.predict(image, verbose=0)
-        result = (results[0, :, :, 0] * 255).astype(np.uint8)
-        skimage.io.imsave(os.path.join(savePath, fileName.replace('.jpg', '.png')), result)
+    for batch, originalImage, fileName in yieldImages(framesDir, targetSize, as_gray=False):
+        results = model.predict(batch, verbose=0)
+        results = np.round((results[0, :, :, 0] * 255), 0).astype(np.uint8)
+        skimage.io.imsave(os.path.join(savePath, fileName.replace('.jpg', '.png')), results)
     # saveResult("data/membrane/test", results)
 
 
-def main():
-    targetSize = (256, 256)
-    model = unet(input_size=targetSize + (1,))
-    model.load_weights("checkpoints/unet_grayscale_pins_4_0.0021_0.999.hdf5")
+def predict512x512x3_n_show():
+    targetSize = (512, 512)
+    model = unet(input_size=targetSize + (3,))
+    model.load_weights("checkpoints/rgb/unet_pins_20_0.001_1.000.hdf5")
 
     framesDir = '/home/trevol/HDD_DATA/Computer_Vision_Task/Computer_Vision_Task/frames_6'
-    for batch, originalImage, fileName in yieldImages(framesDir, targetSize, as_gray=True):
+    for batch, originalImage, fileName in yieldImages(framesDir, targetSize, as_gray=False):
         t0 = time()
         results = model.predict(batch, verbose=0)
         t1 = time()
@@ -85,6 +102,10 @@ def main_():
     cv2.imshow('image', originalImage)
     cv2.imshow('results', results)
     cv2.waitKey()
+
+
+def main():
+    playResults()
 
 
 main()

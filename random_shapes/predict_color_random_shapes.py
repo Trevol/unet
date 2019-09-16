@@ -24,12 +24,12 @@ def adjustImage(img, targetSize, asGray=False):
 
 
 def main():
-    targetSize = (512, 512)
+    targetSize = (256, 256)
     model = unet(input_size=targetSize + (3,))
-    model.load_weights("checkpoints/color_shapes/unet_rgb_shapes_10_0.1244_0.975.hdf5")
+    model.load_weights("checkpoints/color_shapes/shapes_20_0.0000_1.000.hdf5")
 
     while True:
-        shapeImage, _ = generate_shapes(img_shape=(512, 512, 3), bgColor=[117, 122, 125], shapeColor=[180, 211, 250])
+        shapeImage, _ = generate_shapes(img_shape=targetSize + (3,), bgColor=[117, 122, 125], shapeColor=[180, 211, 250])
         batch = adjustImage(shapeImage, targetSize, asGray=False)
         results = model.predict(batch, batch_size=1, verbose=0)
 
